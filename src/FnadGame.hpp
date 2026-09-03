@@ -31,7 +31,7 @@ public:
         }
 
         // power consumers
-        for (short i = 0; i < 6; i++) {
+        for (short i = 0; i < 60; i++) {
             auto entity = registry.create();
             auto& pc = registry.emplace<PowerConsumer>(entity);
             pc.is_active = true;

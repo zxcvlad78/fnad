@@ -3,7 +3,7 @@
 namespace meatengine {
 
 MainLoop::MainLoop(const std::string& title, sf::VideoMode default_mode) 
-    : m_prev_mode(default_mode) 
+    : m_prev_mode(default_mode), m_window_title(title) 
 {
     m_window.create(m_prev_mode, title);
     m_window.setFramerateLimit(144);
@@ -23,9 +23,9 @@ void MainLoop::process_events() {
             if (keyPressed->code == sf::Keyboard::Key::F11) {
                 m_fullscreen = !m_fullscreen;
                 if (m_fullscreen) {
-                    m_window.create(sf::VideoMode::getDesktopMode(), "Game", sf::State::Fullscreen);
+                    m_window.create(sf::VideoMode::getDesktopMode(), m_window_title, sf::State::Fullscreen);
                 } else {
-                    m_window.create(m_prev_mode, "Game", sf::State::Windowed);
+                    m_window.create(m_prev_mode, m_window_title, sf::State::Windowed);
                 }
                 m_window.setFramerateLimit(m_target_fps);
             }

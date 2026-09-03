@@ -18,6 +18,7 @@ private:
     void process_events();
 
 private:
+    std::string m_window_title;
     sf::RenderWindow m_window;
     bool m_fullscreen = false;
     sf::VideoMode m_prev_mode;
