@@ -1,0 +1,9 @@
+{
+  "name": "fnafcpp",
+  "version-string": "0.0.1",
+  "dependencies": [
+    "sfml",
+    "entt",
+    "nlohmann-json"
+  ]
+}

@@ -1,0 +1,5 @@
+.vscode/
+.gigacode/
+build/
+.build/
+out/
