@@ -2,7 +2,7 @@
 #include <fnafcpp/fnafcpp.hpp>
 #include <GameUI.hpp>
 
-class FnadGameState : public meatengine::GameState {
+class FnadGame : public meatengine::GameState {
     sf::Vector2f window_sizef;
 
 public:
@@ -31,7 +31,7 @@ public:
         }
 
         // power consumers
-        for (short i = 0; i < 60; i++) {
+        for (short i = 0; i < 6; i++) {
             auto entity = registry.create();
             auto& pc = registry.emplace<PowerConsumer>(entity);
             pc.is_active = true;
