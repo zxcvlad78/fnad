@@ -1,6 +1,9 @@
 #include <fnafcpp/animatronic/Systems.hpp>
 #include <meatengine/rng.hpp>
 
+#include <meatengine/ResourceLoader.hpp>
+#include <meatengine/SoundPlayer.hpp>
+
 namespace AnimatronicSystems {
     void update(entt::registry& registry, float dt) {
         for (auto [e, a, am, amp] : registry.view<
@@ -24,6 +27,23 @@ namespace AnimatronicSystems {
                 amp.move();
                 registry.emplace_or_replace<EventAnimatronicMove>(e);
             }
+        }
+
+        handle_events(registry);
+    }
+
+    void handle_events(entt::registry& registry) {
+        for (auto [e, a, amp] : registry.view<Animatronic, AnimatronicMovePath, EventAnimatronicMove>().each()) { // 
+            
+            if (amp.at_office()) {
+                meatengine::SoundPlayer::play(
+                    meatengine::ResourceLoader::load<meatengine::SoundBuffer>(
+                        std::string("res/" + a.id + "/jumpscare.mp3")
+                    )
+                );
+            }
+
+            registry.remove<EventAnimatronicMove>(e);
         }
     }
 } // namespace AnimatronicSystems

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <meatengine/meatengine.hpp>
 #include <fnafcpp/fnafcpp.hpp>
 #include <GameUI.hpp>
@@ -51,7 +53,7 @@ public:
                 move_path.rooms.push_back("piske");
                 move_path.rooms.push_back("pe4ko");
                 move_path.rooms.push_back("vozle_ofic");
-                move_path.rooms.push_back("ofic");
+                move_path.rooms.push_back("office");
             }
         }
 
@@ -64,35 +66,35 @@ public:
                 move_path.rooms.push_back("box");
                 move_path.rooms.push_back("shkaf");
                 move_path.rooms.push_back("under_krovat_bed");
-                move_path.rooms.push_back("ofic");
+                move_path.rooms.push_back("office");
             }
         }
 
-        {auto entity = registry.create();
-            auto& timer = registry.emplace<Timer>(entity); {
-                timer.wait_time = 5.f;
-                timer.timeout_func = [](entt::registry& reg) {
-                    auto scream_entity = reg.create();
-                    auto& transform = reg.emplace<Transform>(scream_entity);
-                    reg.emplace<FullScreenScale>(scream_entity);
+        // {auto entity = registry.create();
+        //     auto& timer = registry.emplace<Timer>(entity); {
+        //         timer.wait_time = 5.f;
+        //         timer.timeout_func = [](entt::registry& reg) {
+        //             auto scream_entity = reg.create();
+        //             auto& transform = reg.emplace<Transform>(scream_entity);
+        //             reg.emplace<FullScreenScale>(scream_entity);
 
-                    reg.emplace<Sprite>(scream_entity,
-                        meatengine::ResourceLoader::load<meatengine::Texture>("res/villager.png")
-                    );
-                    auto& sprite_anim = reg.emplace<SpriteAnimation>(scream_entity,
-                        meatengine::ResourceLoader::load<meatengine::SpriteSheet>("res/villager.json")
-                    ); {
-                        sprite_anim.play("default");
-                    }
+        //             reg.emplace<Sprite>(scream_entity,
+        //                 meatengine::ResourceLoader::load<meatengine::Texture>("res/villager.png")
+        //             );
+        //             auto& sprite_anim = reg.emplace<SpriteAnimation>(scream_entity,
+        //                 meatengine::ResourceLoader::load<meatengine::SpriteSheet>("res/villager.json")
+        //             ); {
+        //                 sprite_anim.play("default");
+        //             }
 
-                    meatengine::SoundPlayer::play(
-                        meatengine::ResourceLoader::load<meatengine::SoundBuffer>("res/villager.mp3")
-                    );
-                };
-            }
+        //             meatengine::SoundPlayer::play(
+        //                 meatengine::ResourceLoader::load<meatengine::SoundBuffer>("res/villager.mp3")
+        //             );
+        //         };
+        //     }
 
-            timer.start();
-        }
+        //     timer.start();
+        // }
     }
 
     void handle_event(sf::RenderWindow& window, entt::registry& registry, const sf::Event& event) override {

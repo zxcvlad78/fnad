@@ -11,11 +11,11 @@ struct Animatronic {
 
     std::string name = "";
     std::string id = "";
-    uint8_t ai_level = 1;
+    uint8_t ai_level = MAX_AI_LEVEL;
 };
 
 struct AnimatronicMovement {
-    inline static const float MOVE_INTERVAL = 5.f;
+    inline static const float MOVE_INTERVAL = 2.f;
     float move_timer = 0.f;
     
     bool is_move_cooldown() { return move_timer < MOVE_INTERVAL; }
@@ -41,6 +41,8 @@ public:
             room_idx = 0;
         }
     }
+
+    bool at_office() { return get_room_id() == "office"; }
 
     std::vector<std::string> rooms;
 

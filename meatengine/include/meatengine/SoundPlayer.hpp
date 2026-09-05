@@ -21,8 +21,8 @@ namespace meatengine {
         };
 
         static constexpr size_t POOL_SIZE = 32;
-        static std::vector<Slot> pool;
-        static bool initialized;
+        inline static std::vector<Slot> pool;
+        inline static bool initialized;
 
         static void initialize() {
             if (initialized) return;
@@ -82,7 +82,7 @@ namespace meatengine {
         }
     };
 
-    std::vector<SoundPlayer::Slot> SoundPlayer::pool;
-    bool SoundPlayer::initialized = false;
+    // std::vector<SoundPlayer::Slot> SoundPlayer::pool;
+    // bool SoundPlayer::initialized = false;
 
 } // namespace meatengine

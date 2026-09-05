@@ -3,6 +3,8 @@
 
 namespace meatengine {
     std::shared_ptr<Texture> Texture::operator()(const std::string& path) const {
+        if (path.empty()) return nullptr;
+
         auto texture = std::make_shared<Texture>();
         if (!texture->res.loadFromFile(path)) {
             return nullptr;
@@ -11,15 +13,18 @@ namespace meatengine {
     }
 
     std::shared_ptr<SoundBuffer> SoundBuffer::operator()(const std::string& path) const {
+        if (path.empty()) return nullptr;
+
         auto sb = std::make_shared<SoundBuffer>();
         if (!sb->res.loadFromFile(path)) {
             return nullptr;
         }
         return sb;
-        
     };
 
     std::shared_ptr<Font> Font::operator()(const std::string& path) const {
+        if (path.empty()) return nullptr;
+
         auto font = std::make_shared<Font>();
         if (!font->res.openFromFile(path)) {
             return nullptr;
@@ -28,6 +33,8 @@ namespace meatengine {
     }
 
     std::shared_ptr<Shader> Shader::operator()(const std::string& vertex_path, const std::string& fragment_path) const {
+        if (vertex_path.empty() || fragment_path.empty()) return nullptr;
+        
         auto shader = std::make_shared<Shader>();
         if (!shader->res.loadFromFile(vertex_path, fragment_path)) {
             return nullptr;
@@ -36,8 +43,9 @@ namespace meatengine {
     }
 
     std::shared_ptr<SpriteSheet> SpriteSheet::operator()(const std::string& path) const {
+        if (path.empty()) return nullptr;
+
         json data = get_json_data(path);
-        
         try {
             auto spritesheet = std::make_shared<SpriteSheet>();
 
@@ -77,6 +85,8 @@ namespace meatengine {
     }
 
     std::shared_ptr<TileSet> TileSet::operator()(const std::string& path) const {
+        if (path.empty()) return nullptr;
+
         json data = get_json_data(path);
         if (data.is_null()) {
             std::cerr << "TileSet: failed to parse JSON from " << path << std::endl;
