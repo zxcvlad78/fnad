@@ -15,9 +15,12 @@ namespace AnimatronicSystems {
             }
 
             am.move_timer = 0.f;
+            if (a.ai_level == 0) {
+                continue;
+            }
 
-            uint8_t rint = meatengine::rng::random(uint8_t(0), a.aggression);
-            if (rint <= a.aggression) {
+            uint8_t rint = meatengine::rng::random(uint8_t(0), Animatronic::MAX_AI_LEVEL);
+            if (rint <= a.ai_level) {
                 amp.move();
                 registry.emplace_or_replace<EventAnimatronicMove>(e);
             }

@@ -46,12 +46,12 @@ public:
             }
             auto& movement = registry.emplace<AnimatronicMovement>(entity);
             auto& move_path = registry.emplace<AnimatronicMovePath>(entity); {
-                move_path.rooms.emplace(0, "scene");
-                move_path.rooms.emplace(1, "sex");
-                move_path.rooms.emplace(2, "piske");
-                move_path.rooms.emplace(3, "pe4ko");
-                move_path.rooms.emplace(4, "vozle_ofic");
-                move_path.rooms.emplace(5, "ofic");
+                move_path.rooms.push_back("scene");
+                move_path.rooms.push_back("sex");
+                move_path.rooms.push_back("piske");
+                move_path.rooms.push_back("pe4ko");
+                move_path.rooms.push_back("vozle_ofic");
+                move_path.rooms.push_back("ofic");
             }
         }
 
@@ -61,10 +61,10 @@ public:
             }
             auto& movement = registry.emplace<AnimatronicMovement>(entity);
             auto& move_path = registry.emplace<AnimatronicMovePath>(entity); {
-                move_path.rooms.emplace(0, "box");
-                move_path.rooms.emplace(1, "shkaf");
-                move_path.rooms.emplace(2, "under_krovat_bed");
-                move_path.rooms.emplace(2, "ofic");
+                move_path.rooms.push_back("box");
+                move_path.rooms.push_back("shkaf");
+                move_path.rooms.push_back("under_krovat_bed");
+                move_path.rooms.push_back("ofic");
             }
         }
 

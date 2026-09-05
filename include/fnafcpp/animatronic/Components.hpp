@@ -2,19 +2,21 @@
 
 #include <entt/entt.hpp>
 #include <string>
-#include <unordered_map>
+#include <vector>
 
 #include <meatengine/Resources.hpp>
 
 struct Animatronic {
+    static const uint8_t MAX_AI_LEVEL = 20;
+
     std::string name = "";
     std::string id = "";
-    uint8_t aggression = 1;
+    uint8_t ai_level = 1;
 };
 
 struct AnimatronicMovement {
+    inline static const float MOVE_INTERVAL = 5.f;
     float move_timer = 0.f;
-    const float MOVE_INTERVAL = 5.f;
     
     bool is_move_cooldown() { return move_timer < MOVE_INTERVAL; }
 };
@@ -40,7 +42,7 @@ public:
         }
     }
 
-    std::unordered_map<uint8_t, std::string> rooms;
+    std::vector<std::string> rooms;
 
     //bool at_office() { return rooms.at(current_room_idx). }
 };
