@@ -73,7 +73,7 @@ namespace meatengine {
             pool[slot].sound.play();
         }
 
-        static void stopAll() {
+        static void stop_all() {
             initialize();
             for (auto& slot : pool) {
                 slot.sound.stop();

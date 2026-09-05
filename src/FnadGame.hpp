@@ -4,9 +4,11 @@
 
 class FnadGame : public meatengine::GameState {
     sf::Vector2f window_sizef;
+    
 
 public:
-    void on_enter(entt::registry& registry) override {
+    void on_enter(sf::RenderWindow& window, entt::registry& registry) override {
+
         //bg
         {auto entity = registry.create();
             registry.emplace<ZIndex>(entity, -1);
@@ -93,7 +95,7 @@ public:
         }
     }
 
-    void handle_event(const sf::Event& event, entt::registry& registry) override {
+    void handle_event(sf::RenderWindow& window, entt::registry& registry, const sf::Event& event) override {
         
     }
 
@@ -110,5 +112,5 @@ public:
         GameUI::render(registry, window, dt);
     }
 
-    void on_exit(entt::registry& registry) override {}
+    void on_exit(sf::RenderWindow& window, entt::registry& registry) override {}
 };

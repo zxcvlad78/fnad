@@ -3,7 +3,7 @@
 #include <sstream>
 #include "SFML/Graphics.hpp"
 
-namespace parsing {
+namespace meatengine::parsing {
     inline sf::Color str_to_color(const std::string& str) {
         std::stringstream ss(str);
         int r = 0, g = 0, b = 0, a = 255;

@@ -1,5 +1,9 @@
 #include <meatengine/MainLoop.hpp>
 
+#include <meatengine/Resources.hpp>
+#include <meatengine/ResourceLoader.hpp>
+#include <meatengine/console/Console.hpp>
+
 namespace meatengine {
 
 MainLoop::MainLoop(const std::string& title, sf::VideoMode default_mode) 
@@ -7,6 +11,17 @@ MainLoop::MainLoop(const std::string& title, sf::VideoMode default_mode)
 {
     m_window.create(m_prev_mode, title);
     m_window.setFramerateLimit(144);
+
+    // потом как нибудь
+    entt::resource<meatengine::Font> mainfont = meatengine::ResourceLoader::load<meatengine::Font>("res/fonts/mainfont.ttf");
+    if (mainfont.handle()) {
+        meatengine::Console::get_instance().init(
+            m_window,
+            mainfont->res,
+            16
+        );
+    }
+    //
 }
 
 void MainLoop::change_state(std::unique_ptr<GameState> new_state) {
@@ -31,8 +46,12 @@ void MainLoop::process_events() {
             }
         }
 
+        // потом как нибудь
+        meatengine::Console::get_instance().handle_event(*event, m_window);
+        //
+
         if (m_current_state) {
-            m_current_state->handle_event(*event, m_registry);
+            m_current_state->handle_event(m_window, m_registry, *event);
         }
     }
 }
@@ -42,10 +61,10 @@ void MainLoop::run(std::unique_ptr<GameState> initial_state) {
 
     while (m_window.isOpen()) {
         if (m_next_state) {
-            if (m_current_state) m_current_state->on_exit(m_registry);
+            if (m_current_state) m_current_state->on_exit(m_window, m_registry);
             m_registry.clear();
             m_current_state = std::move(m_next_state);
-            m_current_state->on_enter(m_registry);
+            m_current_state->on_enter(m_window, m_registry);
         }
 
         process_events();
@@ -56,11 +75,19 @@ void MainLoop::run(std::unique_ptr<GameState> initial_state) {
             m_current_state->update(m_window, m_registry, dt);
         }
 
+        // потом как нибудь
+        meatengine::Console::get_instance().update(m_window, dt);
+        //
+
         m_window.clear(sf::Color::Black);
         
         if (m_current_state) {
             m_current_state->render(m_window, m_registry, dt);
         }
+
+        // потом как нибудь
+        meatengine::Console::get_instance().render(m_window);
+        //
 
         m_window.setView(m_window.getDefaultView());
         m_window.display();

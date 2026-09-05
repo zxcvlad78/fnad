@@ -27,10 +27,10 @@ namespace meatengine {
         }
         sf::Vector2f window_size = static_cast<sf::Vector2f>(window.getSize());
 
-        theme_outline_color = parsing::str_to_color(config_file->get("theme_outline_color", "30 30 40"));
-        foreground_color = parsing::str_to_color(config_file->get("foreground_color", "25 25 25 255"));
-        background_color = parsing::str_to_color(config_file->get("background_color", "15 15 15 240"));
-        selection_color = parsing::str_to_color(config_file->get("selection_color", "255 15 15 127"));
+        theme_outline_color = meatengine::parsing::str_to_color(config_file->get("theme_outline_color", "30 30 40"));
+        foreground_color = meatengine::parsing::str_to_color(config_file->get("foreground_color", "25 25 25 255"));
+        background_color = meatengine::parsing::str_to_color(config_file->get("background_color", "15 15 15 240"));
+        selection_color = meatengine::parsing::str_to_color(config_file->get("selection_color", "255 15 15 127"));
         char_size = config_file->get("char_size", 14);
         console_width = config_file->get("console_width", window_size.x);
         console_height = config_file->get("console_height", window_size.y);
@@ -686,7 +686,7 @@ namespace meatengine {
                 if (!args.empty()) {
                     try {
                         theme_outline_color = parse_color(args);
-                        config_file->set("theme_outline_color", parsing::color_to_str(theme_outline_color));
+                        config_file->set("theme_outline_color", meatengine::parsing::color_to_str(theme_outline_color));
                     } catch (const std::exception& e) {
                         Console::get_instance().print_error(e.what());
                     }
@@ -702,7 +702,7 @@ namespace meatengine {
                 if (!args.empty()) {
                     try {
                         foreground_color = parse_color(args);
-                        config_file->set("foreground_color", parsing::color_to_str(foreground_color));
+                        config_file->set("foreground_color", meatengine::parsing::color_to_str(foreground_color));
                     } catch (const std::exception& e) {
                         Console::get_instance().print_error(e.what());
                     }
@@ -718,7 +718,7 @@ namespace meatengine {
                 if (!args.empty()) {
                     try {
                         background_color = parse_color(args);
-                        config_file->set("background_color", parsing::color_to_str(background_color));
+                        config_file->set("background_color", meatengine::parsing::color_to_str(background_color));
                     } catch (const std::exception& e) {
                         Console::get_instance().print_error(e.what());
                     }
