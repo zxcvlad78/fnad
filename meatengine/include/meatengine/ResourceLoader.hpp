@@ -27,7 +27,7 @@ namespace meatengine {
             auto& cache = get_cache<T>();
 
             std::string id_str;
-            ((id_str += std::string{std::forward<Args>(args)} + "|"), ...);
+            ((id_str += std::string{args} + "|"), ...);
             if (!id_str.empty()) id_str.pop_back();
 
             if (id_str.empty()) return entt::resource<T>{nullptr};

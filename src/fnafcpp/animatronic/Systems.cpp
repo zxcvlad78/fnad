@@ -38,7 +38,7 @@ namespace AnimatronicSystems {
             if (amp.at_office()) {
                 meatengine::SoundPlayer::play(
                     meatengine::ResourceLoader::load<meatengine::SoundBuffer>(
-                        "res/waper/jumpscare.mp3"
+                        "res/" + a.id + "/jumpscare.mp3"
                     )
                 );
             }

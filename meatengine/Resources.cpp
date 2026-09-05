@@ -12,7 +12,6 @@ namespace meatengine {
     }
 
     std::shared_ptr<SoundBuffer> SoundBuffer::operator()(const std::string& path) const {
-        printf("dsdsd %s\n", path.c_str());
         auto sb = std::make_shared<SoundBuffer>();
         if (!sb->res.loadFromFile(path)) {
             return nullptr;

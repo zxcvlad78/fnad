@@ -45,6 +45,7 @@ public:
         {auto entity = registry.create();
             auto& animatronic = registry.emplace<Animatronic>(entity); {
                 animatronic.name = "Darky";
+                animatronic.id = "darky";
             }
             auto& movement = registry.emplace<AnimatronicMovement>(entity);
             auto& move_path = registry.emplace<AnimatronicMovePath>(entity); {
@@ -60,6 +61,7 @@ public:
         {auto entity = registry.create();
             auto& animatronic = registry.emplace<Animatronic>(entity); {
                 animatronic.name = "Waper";
+                animatronic.id = "waper";
             }
             auto& movement = registry.emplace<AnimatronicMovement>(entity);
             auto& move_path = registry.emplace<AnimatronicMovePath>(entity); {
