@@ -8,14 +8,14 @@
 
 struct Animatronic {
     static const uint8_t MAX_AI_LEVEL = 20;
+    uint8_t ai_level = 1;
 
-    std::string name = "";
     std::string id = "";
-    uint8_t ai_level = MAX_AI_LEVEL;
+    std::string name = "";
 };
 
 struct AnimatronicMovement {
-    inline static const float MOVE_INTERVAL = 2.f;
+    inline static const float MOVE_INTERVAL = 5.f;
     float move_timer = 0.f;
     
     bool is_move_cooldown() { return move_timer < MOVE_INTERVAL; }

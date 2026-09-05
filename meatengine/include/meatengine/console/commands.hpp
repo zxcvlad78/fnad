@@ -2,11 +2,11 @@
 
 #include <entt/entt.hpp>
 #include <SFML/Audio.hpp>
-#include <meatengine/console/Console.hpp>
+#include <meatengine/meatengine.hpp>
 
 
 namespace meatengine::console_commands {
-    inline void init(sf::RenderWindow& window, entt::registry& registry) {
+    inline void init(sf::RenderWindow& window) {
         Console::get_instance().register_command(
             "cfg.save",
             [](const std::vector<std::string>& args) {
@@ -45,28 +45,28 @@ namespace meatengine::console_commands {
             "Set audio volume (0.0-100.0)",
             "volume <float>"
         );
-        // Console::get_instance().register_command(
-        //     "speed",
-        //     [](const std::vector<std::string>& args) {
-        //         if (!args.empty()) {
-        //             try {
-        //                 float val = std::stof(args[0]);
-        //                 if (val >= 0.f) {
-        //                     Singleton::Variables::speed_scale = val;
-        //                     Console::get_instance().print_success("Speed scale set to: " + std::to_string(val));
-        //                 } else {
-        //                     Console::get_instance().print_error("Speed scale must be positive");
-        //                 }
-        //             } catch (const std::exception& e) {
-        //                 Console::get_instance().print_error(e.what());
-        //             }
-        //         } else {
-        //             Console::get_instance().print_success("Current speed scale: " + std::to_string(Singleton::Variables::speed_scale));
-        //         }
-        //     },
-        //     "Set time speed multiplier",
-        //     "speed <float>"
-        // );
+        Console::get_instance().register_command(
+            "speed",
+            [](const std::vector<std::string>& args) {
+                if (!args.empty()) {
+                    try {
+                        float val = std::stof(args[0]);
+                        if (val >= 0.f) {
+                            meatengine::MainLoop::dt_scale = val;
+                            Console::get_instance().print_success("Speed scale set to: " + std::to_string(val));
+                        } else {
+                            Console::get_instance().print_error("Speed scale must be positive");
+                        }
+                    } catch (const std::exception& e) {
+                        Console::get_instance().print_error(e.what());
+                    }
+                } else {
+                    Console::get_instance().print_success("Current speed scale: " + std::to_string(meatengine::MainLoop::dt_scale));
+                }
+            },
+            "Set time speed multiplier",
+            "speed <float>"
+        );
 
         // Test
         // for (uint8_t i = 0; i < 25; i ++) {

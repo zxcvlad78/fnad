@@ -4,6 +4,7 @@
 #include <cmath>
 #include <string_view>
 #include <meatengine/parsing.hpp>
+#include <meatengine/console/commands.hpp>
 
 namespace meatengine {
     Console& Console::get_instance() {
@@ -107,6 +108,7 @@ namespace meatengine {
         
 
         register_default_commands();
+        console_commands::init(window);
         print_success("Console initialized! Type 'help' for available commands");
     }
 

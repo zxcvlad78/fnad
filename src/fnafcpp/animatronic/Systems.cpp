@@ -4,6 +4,8 @@
 #include <meatengine/ResourceLoader.hpp>
 #include <meatengine/SoundPlayer.hpp>
 
+#include <fnafcpp/packed_entity.hpp>
+
 namespace AnimatronicSystems {
     void update(entt::registry& registry, float dt) {
         for (auto [e, a, am, amp] : registry.view<
@@ -41,6 +43,11 @@ namespace AnimatronicSystems {
                         "res/" + a.id + "/jumpscare.mp3"
                     )
                 );
+
+                // fnafcpp::packed_entity::jumpscare::spawn(registry,
+                //     "res/" + a.id + "/jumpscare.png",
+                //     "res/" + a.id + "/jumpscare.json"
+                // );
             }
 
             registry.remove<EventAnimatronicMove>(e);

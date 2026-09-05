@@ -69,7 +69,7 @@ void MainLoop::run(std::unique_ptr<GameState> initial_state) {
 
         process_events();
 
-        float dt = m_clock.restart().asSeconds();
+        float dt = m_clock.restart().asSeconds() * dt_scale;
 
         if (m_current_state) {
             m_current_state->update(m_window, m_registry, dt);
