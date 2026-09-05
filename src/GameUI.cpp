@@ -6,6 +6,8 @@
 #include <fnafcpp/animatronic/Components.hpp>
 
 namespace GameUI {
+    sf::Font font = meatengine::ResourceLoader::load<meatengine::Font>("res/fonts/mainfont.ttf")->res;
+
     void render(entt::registry& registry, sf::RenderWindow& window, float dt) {
         render_power_sources(registry, window, dt);
         render_power_consumers(registry, window, dt);
@@ -14,7 +16,7 @@ namespace GameUI {
     }
 
     void render_animatronic_pos(entt::registry& registry, sf::RenderWindow& window, float dt) {
-        static sf::Text text(resourceloader.load<sf::Font, sf::FontLoader>("res/fonts/mainfont.ttf"));
+        static sf::Text text(font);
         text.setPosition({255.f, 5.f});
         text.setString("Animatronics");
         window.draw(text); 
@@ -25,7 +27,7 @@ namespace GameUI {
         int txt_count = 0;
 
         for (auto [e, a, amp] : registry.view<Animatronic, AnimatronicMovePath>().each()) {
-            sf::Text a_text(resourceloader.load<sf::Font, sf::FontLoader>("res/fonts/mainfont.ttf"));
+            sf::Text a_text(font);
             a_text.setString(
                 a.name + ": " + std::to_string(amp.get_room_idx() + 1) + "/" + std::to_string(amp.rooms.size())
                 + " (" + amp.get_room_id() + ")"
@@ -42,7 +44,7 @@ namespace GameUI {
     }
 
     void render_time(entt::registry& registry, sf::RenderWindow& window, float dt) {
-        static sf::Text text(resourceloader.load<sf::Font, sf::FontLoader>("res/fonts/mainfont.ttf"));
+        static sf::Text text(font);
         uint16_t text_csize = 12;
         text.setFillColor({200, 200, 200});
         text.setCharacterSize(text_csize);
@@ -63,7 +65,7 @@ namespace GameUI {
         //static sf::RectangleShape bg;
         //bg.setPosition({15.f, 15.f});
 
-        static sf::Text text(resourceloader.load<sf::Font, sf::FontLoader>("res/fonts/mainfont.ttf"));
+        static sf::Text text(font);
         text.setPosition({5.f, 5.f});
         text.setString("Power Sources");
         window.draw(text); 

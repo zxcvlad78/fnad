@@ -14,45 +14,50 @@
 
 using json = nlohmann::json;
 
-inline json get_json_data(const std::string& path) {
-    std::ifstream file(path);
-    if (!file.is_open()) return nullptr;
-    json j;
-    file >> j;
-    return j;
-}
+namespace meatengine {
+    inline json get_json_data(const std::string& path) {
+        std::ifstream file(path);
+        if (!file.is_open()) return nullptr;
+        json j;
+        file >> j;
+        return j;
+    }
 
-struct FrameData {
-    int x, y, w, h;
-};
-
-namespace sf
-{
-    struct TextureLoader {
-        using result_type = std::shared_ptr<Texture>;
-        std::shared_ptr<Texture> operator()(const std::string& path) const;
-    };
-
-    struct SoundBufferLoader {
-        using result_type = std::shared_ptr<SoundBuffer>;
-        std::shared_ptr<SoundBuffer> operator()(const std::string& path) const;
-    };
-
-    struct FontLoader {
+    struct Font {
         using result_type = std::shared_ptr<Font>;
+
+        sf::Font res;
         std::shared_ptr<Font> operator()(const std::string& path) const;
     };
 
-    struct ShaderLoader {
+    struct Texture {
+        using result_type = std::shared_ptr<Texture>;
+
+        sf::Texture res;
+        std::shared_ptr<Texture> operator()(const std::string& path) const;
+    };
+
+    struct SoundBuffer {
+        using result_type = std::shared_ptr<SoundBuffer>;
+
+        sf::SoundBuffer res;
+        std::shared_ptr<SoundBuffer> operator()(const std::string& path) const;
+    };
+
+    struct Shader {
         using result_type = std::shared_ptr<Shader>;
+
+        sf::Shader res;
         std::shared_ptr<Shader> operator()(const std::string& vertex_path, const std::string& fragment_path) const;
     };
 
-}
+    struct Animation {
+        using result_type = std::shared_ptr<Animation>;
 
-namespace Animation
-{
-    struct Resource {
+        struct FrameData {
+            int x, y, w, h;
+        };
+
         std::string name;
         float fps = 12.f;
         bool is_looping = true;
@@ -65,47 +70,31 @@ namespace Animation
 
             return fps / size;
         }
+
     };
 
-    struct Loader {
-        using result_type = std::shared_ptr<Resource>;
-        //
-    };
+    struct SpriteSheet {
+        using result_type = std::shared_ptr<SpriteSheet>;
 
-};
-
-namespace Spritesheet
-{
-    struct Resource {
         int atlas_width = 1;
         int atlas_height = 1;
-        std::unordered_map<std::string, Animation::Resource> animations;
+        std::unordered_map<std::string, Animation> animations;
+
+        std::shared_ptr<SpriteSheet> operator()(const std::string& path) const;
     };
 
-    struct Loader {
-        using result_type = std::shared_ptr<Resource>;
-        std::shared_ptr<Resource> operator()(const std::string& path) const;
-    };
+    struct TileSet {
+        using result_type = std::shared_ptr<TileSet>;
 
-};
-
-
-namespace TileSet
-{
-    struct Resource {
-        entt::resource<sf::Texture> texture;
+        entt::resource<Texture> texture;
         sf::Vector2u size() {
             if (texture.handle() == nullptr) return sf::Vector2u{ 0, 0 };
-            return texture->getSize();
+            return texture->res.getSize();
         }
         
         unsigned short tile_size = 16;
         short y_sort_origin = 0;
-    };
 
-    struct Loader {
-        using result_type = std::shared_ptr<Resource>;
-        std::shared_ptr<Resource> operator()(const std::string& path) const;
+        std::shared_ptr<TileSet> operator()(const std::string& path) const;
     };
-
-};
+}

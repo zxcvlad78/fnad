@@ -10,14 +10,14 @@ struct Sprite {
     bool center = false;
 
     Sprite() = default;
-    Sprite(entt::resource<sf::Texture> texture) : sprite(*texture) { }
+    Sprite(entt::resource<meatengine::Texture> texture) : sprite(texture.handle()->res) { }
 };
 
 struct FullScreenScale {  };
 
 struct SpriteAnimation {
-    entt::resource<Spritesheet::Resource> spritesheet;
-    const Animation::Resource* current_animation = nullptr;
+    entt::resource<meatengine::SpriteSheet> spritesheet;
+    const meatengine::Animation* current_animation = nullptr;
     
     unsigned int current_frame_idx = 0;
     float time_accumulator = 0.0f;

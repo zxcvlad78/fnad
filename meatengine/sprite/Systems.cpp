@@ -106,7 +106,7 @@ namespace SpriteSystems {
                 }
             }
 
-            const FrameData& frame = sprite_anim.current_animation->frames[sprite_anim.current_frame_idx];
+            const meatengine::Animation::FrameData& frame = sprite_anim.current_animation->frames[sprite_anim.current_frame_idx];
             sprite.sprite.setTextureRect(sf::IntRect({frame.x, frame.y}, {frame.w, frame.h}));
         }
     }

@@ -1,45 +1,66 @@
 #pragma once
-#include "Resources.hpp"
-#include <entt/resource/cache.hpp>
+
+#include <entt/resource/resource.hpp>
 #include <entt/core/hashed_string.hpp>
+#include <string>
+#include <unordered_map>
+#include <memory>
+#include <utility>
 
-class ResourceLoader {
-private:
-    std::tuple<
-        entt::resource_cache<sf::Font, sf::FontLoader>,
-        entt::resource_cache<sf::Texture, sf::TextureLoader>,
-        entt::resource_cache<sf::SoundBuffer, sf::SoundBufferLoader>,
-        entt::resource_cache<Spritesheet::Resource, Spritesheet::Loader>,
-        entt::resource_cache<sf::Shader, sf::ShaderLoader>,
-        entt::resource_cache<TileSet::Resource, TileSet::Loader>
-    > m_caches;
+namespace meatengine {
+    class ResourceLoader {
+    private:
+        template<typename T>
+        struct Cache {
+            std::unordered_map<entt::id_type, std::shared_ptr<T>> map;
+        };
 
-    template <typename T, typename Loader>
-    auto& get_cache() {
-        return std::get<entt::resource_cache<T, Loader>>(m_caches);
-    }
+        template<typename T>
+        static Cache<T>& get_cache() {
+            static Cache<T> cache;
+            return cache;
+        }
 
-public:
-    ResourceLoader() = default;
+    public:
+        template<typename T, typename... Args>
+        static entt::resource<T> load(Args&&... args) {
+            auto& cache = get_cache<T>();
 
-    template <typename T, typename Loader, typename ...Args>
-    entt::resource<T> load(const std::string path, Args&&... args) {
-        if (path.empty()) return entt::resource<T>{nullptr};
+            std::string id_str;
+            ((id_str += std::string{std::forward<Args>(args)} + "|"), ...);
+            if (!id_str.empty()) id_str.pop_back();
 
-        auto id = entt::hashed_string{path.c_str()};
-        auto& cache = get_cache<T, Loader>();
+            auto id = entt::hashed_string{id_str.c_str()};
 
-        auto result = cache.load(id, std::forward<Args>(args)..., path);
-        return result.first->second;
-    }
+            auto it = cache.map.find(id);
+            if (it != cache.map.end()) {
+                return entt::resource<T>{it->second};
+            }
 
-    template<typename T, typename Loader>
-    entt::resource<T> get(const std::string& path) {
-        auto id = entt::hashed_string{path.c_str()};
-        auto& cache = get_cache<T, Loader>();
-        return cache.handle(id);
-    }
+            auto resource = T{}(std::forward<Args>(args)...);
+            if (!resource) {
+                return entt::resource<T>{nullptr};
+            }
 
-};
+            cache.map[id] = resource;
+            return entt::resource<T>{resource};
+        }
 
-extern ResourceLoader resourceloader;
+        template<typename T, typename... Args>
+        static entt::resource<T> get(Args&&... args) {
+            auto& cache = get_cache<T>();
+
+            std::string id_str;
+            ((id_str += std::string{std::forward<Args>(args)} + "|"), ...);
+            if (!id_str.empty()) id_str.pop_back();
+
+            auto id = entt::hashed_string{id_str.c_str()};
+
+            auto it = cache.map.find(id);
+            if (it != cache.map.end()) {
+                return entt::resource<T>{it->second};
+            }
+            return entt::resource<T>{nullptr};
+        }
+    };
+}

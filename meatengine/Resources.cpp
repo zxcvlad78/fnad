@@ -1,53 +1,45 @@
 #include <meatengine/Resources.hpp>
 #include <meatengine/ResourceLoader.hpp>
 
-namespace sf
-{
-    std::shared_ptr<Texture> TextureLoader::operator()(const std::string& path) const {
+namespace meatengine {
+    std::shared_ptr<Texture> Texture::operator()(const std::string& path) const {
         auto texture = std::make_shared<Texture>();
-        if (!texture->loadFromFile(path)) {
+        if (!texture->res.loadFromFile(path)) {
             return nullptr;
         }
         return texture;
     }
 
-    std::shared_ptr<SoundBuffer> SoundBufferLoader::operator()(const std::string& path) const {
+    std::shared_ptr<SoundBuffer> SoundBuffer::operator()(const std::string& path) const {
         auto sb = std::make_shared<SoundBuffer>();
-        if (!sb->loadFromFile(path)) {
+        if (!sb->res.loadFromFile(path)) {
             return nullptr;
         }
         return sb;
         
     };
 
-    std::shared_ptr<Font> FontLoader::operator()(const std::string& path) const {
+    std::shared_ptr<Font> Font::operator()(const std::string& path) const {
         auto font = std::make_shared<Font>();
-        if (!font->openFromFile(path)) {
+        if (!font->res.openFromFile(path)) {
             return nullptr;
         }
         return font;
     }
 
-    std::shared_ptr<Shader> ShaderLoader::operator()(const std::string& vertex_path, const std::string& fragment_path) const {
+    std::shared_ptr<Shader> Shader::operator()(const std::string& vertex_path, const std::string& fragment_path) const {
         auto shader = std::make_shared<Shader>();
-        if (!shader->loadFromFile(vertex_path, fragment_path)) {
+        if (!shader->res.loadFromFile(vertex_path, fragment_path)) {
             return nullptr;
         }
         return shader;
     }
 
-}
-
-namespace Animation {
-    
-};
-
-namespace Spritesheet {
-    std::shared_ptr<Resource> Loader::operator()(const std::string& path) const {
-        json data = ::get_json_data(path);
+    std::shared_ptr<SpriteSheet> SpriteSheet::operator()(const std::string& path) const {
+        json data = get_json_data(path);
         
         try {
-            auto spritesheet = std::make_shared<Resource>();
+            auto spritesheet = std::make_shared<SpriteSheet>();
 
             if (data.contains("meta") && data["meta"].is_object()) {
                 auto& meta = data["meta"];
@@ -56,14 +48,14 @@ namespace Spritesheet {
             }
             if (data.contains("animations") && data["animations"].is_object()) {
                 for (auto& [anim_name, anim_data] : data["animations"].items()) {
-                    Animation::Resource anim;
+                    Animation anim;
                     anim.name = anim_name;
                     anim.fps = anim_data.value("fps", 12.f);
                     anim.is_looping = anim_data.value("looping", true);
     
                     if (anim_data.contains("frames") && anim_data["frames"].is_array()) {
                         for (auto& frame_json : anim_data["frames"]) {
-                            FrameData frame;
+                            Animation::FrameData frame;
                             frame.x = frame_json.value("x", 0);
                             frame.y = frame_json.value("y", 0);
                             frame.w = frame_json.value("w", 0);
@@ -83,23 +75,19 @@ namespace Spritesheet {
             return nullptr;
         }
     }
-};
 
-
-namespace TileSet
-{
-    std::shared_ptr<Resource> Loader::operator()(const std::string& path) const {
-        json data = ::get_json_data(path);
+    std::shared_ptr<TileSet> TileSet::operator()(const std::string& path) const {
+        json data = get_json_data(path);
         if (data.is_null()) {
             std::cerr << "TileSet: failed to parse JSON from " << path << std::endl;
             return nullptr;
         }
 
         try {
-            auto tileset = std::make_shared<Resource>();
+            auto tileset = std::make_shared<TileSet>();
 
             if (data.contains("texture_path") && data["texture_path"].is_string()) {
-                tileset->texture = resourceloader.load<sf::Texture, sf::TextureLoader>(data["texture_path"].get<std::string>());
+                tileset->texture = ResourceLoader::load<Texture>(data["texture_path"].get<std::string>());
             } else {
                 std::cerr << "TileSet: missing 'texture_path' field in " << path << std::endl;
                 return nullptr;

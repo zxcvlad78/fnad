@@ -14,7 +14,7 @@ public:
             registry.emplace<FullScreenScale>(entity);
             
             auto& sprite = registry.emplace<Sprite>(entity,
-                resourceloader.load<sf::Texture, sf::TextureLoader>("res/bg.jpg")
+                meatengine::ResourceLoader::load<meatengine::Texture>("res/bg.jpg")
             );
         }
 
@@ -75,14 +75,16 @@ public:
                     reg.emplace<FullScreenScale>(scream_entity);
 
                     reg.emplace<Sprite>(scream_entity,
-                        resourceloader.load<sf::Texture, sf::TextureLoader>("res/villager.png")
+                        meatengine::ResourceLoader::load<meatengine::Texture>("res/villager.png")
                     );
                     auto& sprite_anim = reg.emplace<SpriteAnimation>(scream_entity,
-                        resourceloader.load<Spritesheet::Resource, Spritesheet::Loader>("res/villager.json")
-                    ); { sprite_anim.play("default"); }
+                        meatengine::ResourceLoader::load<meatengine::SpriteSheet>("res/villager.json")
+                    ); {
+                        sprite_anim.play("default");
+                    }
 
-                    soundplayer.play(
-                        resourceloader.load<sf::SoundBuffer, sf::SoundBufferLoader>("res/villager.mp3")
+                    meatengine::SoundPlayer::play(
+                        meatengine::ResourceLoader::load<meatengine::SoundBuffer>("res/villager.mp3")
                     );
                 };
             }
@@ -96,8 +98,8 @@ public:
     }
 
     void update(sf::RenderWindow& window, entt::registry& registry, float dt) override {
-        SpriteSystems::update(registry, window, dt);
         TimerSystems::update(registry, dt);
+        SpriteSystems::update(registry, window, dt);
         NightSystems::update(registry, dt);
         AnimatronicSystems::update(registry, dt);
     }

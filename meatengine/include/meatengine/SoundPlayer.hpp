@@ -1,87 +1,88 @@
 #pragma once
-#include "ResourceLoader.hpp"
+
+#include <meatengine/ResourceLoader.hpp>
+#include <meatengine/Resources.hpp>
 
 #undef max
 
-class SoundPlayer {
-private:
-    static constexpr size_t POOL_SIZE = 32;
-    sf::SoundBuffer dummyBuffer;
-    std::vector<sf::Sound> pool;
-    std::vector<int> priorities;
-    size_t next = 0;
+namespace meatengine {
 
-public:
-    SoundPlayer() {
-        pool.reserve(POOL_SIZE);
-        priorities.reserve(POOL_SIZE);
-        for (size_t i = 0; i < POOL_SIZE; ++i) {
-            pool.emplace_back(dummyBuffer);
-            priorities.emplace_back(0);
-        }
-    }
+    class SoundPlayer {
+    private:
+        inline static sf::SoundBuffer dummy_buffer;
 
-    void play(sf::SoundBuffer& buffer,
-        sf::Vector2f position = {0.f, 0.f},
-        float min_distance = 100.f,
-        int priority = 0,
-        float attenuation = 1.f
-    ) {
-        int free_slot = -1;
-        int lowest_priority_slot = -1;
-        int lowest_priority = std::numeric_limits<int>::max();
+        struct Slot {
+            sf::Sound sound;
+            entt::resource<SoundBuffer> buffer;
+            int priority = 0;
 
-        for (size_t i = 0; i < POOL_SIZE; ++i) {
-            if (pool[i].getStatus() == sf::Sound::Status::Stopped) {
-                free_slot = static_cast<int>(i);
-                break;
-            }
-            if (priorities[i] < lowest_priority) {
-                lowest_priority = priorities[i];
-                lowest_priority_slot = static_cast<int>(i);
-            }
+            Slot() : sound(dummy_buffer) {}
+            Slot(const sf::SoundBuffer& buffer) : sound(buffer) {}
+        };
+
+        static constexpr size_t POOL_SIZE = 32;
+        static std::vector<Slot> pool;
+        static bool initialized;
+
+        static void initialize() {
+            if (initialized) return;
+            pool.resize(POOL_SIZE);
+            initialized = true;
         }
 
-        int slot_to_use = -1;
+    public:
+        SoundPlayer() = delete;
 
-        if (free_slot != -1) {
-            slot_to_use = free_slot;
-        } else {
-            if (priority > lowest_priority) {
-                slot_to_use = lowest_priority_slot;
-                pool[slot_to_use].stop();
-            } else {
+        static void play(entt::resource<SoundBuffer> buffer,
+                         sf::Vector2f position = {0.f, 0.f},
+                         float min_distance = 100.f,
+                         int priority = 0,
+                         float attenuation = 1.f) {
+            initialize();
+            if (!buffer) return;
+
+            int slot = -1;
+            int lowest_priority = std::numeric_limits<int>::max();
+
+            for (size_t i = 0; i < pool.size(); ++i) {
+                if (pool[i].sound.getStatus() == sf::Sound::Status::Stopped) {
+                    slot = static_cast<int>(i);
+                    break;
+                }
+                if (pool[i].priority < lowest_priority) {
+                    lowest_priority = pool[i].priority;
+                    slot = static_cast<int>(i);
+                }
+            }
+
+            if (slot == -1) return;
+
+            if (pool[slot].sound.getStatus() != sf::Sound::Status::Stopped &&
+                priority <= pool[slot].priority) {
                 return;
             }
+
+            pool[slot].sound.stop();
+            pool[slot].buffer = buffer;
+            pool[slot].sound.setBuffer(buffer->res);
+            pool[slot].sound.setPosition({position.x, position.y, 0.f});
+            pool[slot].sound.setRelativeToListener(false);
+            pool[slot].sound.setMinDistance(min_distance);
+            pool[slot].sound.setAttenuation(attenuation);
+            pool[slot].priority = priority;
+            pool[slot].sound.play();
         }
 
-        auto& sound = pool[slot_to_use];
-        sound.stop();
-        sound.setBuffer(buffer);
-        sound.setPosition({position.x, position.y, 0.f});
-        sound.setRelativeToListener(false);
-        sound.setMinDistance(min_distance);
-        sound.setAttenuation(attenuation);
-        priorities[slot_to_use] = priority;
+        static void stopAll() {
+            initialize();
+            for (auto& slot : pool) {
+                slot.sound.stop();
+                slot.buffer.reset();
+            }
+        }
+    };
 
-        sound.play();
-    }
+    std::vector<SoundPlayer::Slot> SoundPlayer::pool;
+    bool SoundPlayer::initialized = false;
 
-
-    
-    void play(entt::resource<sf::SoundBuffer> buffer,
-        sf::Vector2f position = {0.f, 0.f},
-        float min_distance = 100.f,
-        int priority = 0,
-        float attenuation = 1.f
-    ) {
-        if (buffer) play(*buffer,
-            position,
-            min_distance,
-            priority,
-            attenuation
-        );
-    }
-};
-
-extern SoundPlayer soundplayer;
+} // namespace meatengine
