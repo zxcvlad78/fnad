@@ -30,6 +30,8 @@ namespace meatengine {
             ((id_str += std::string{std::forward<Args>(args)} + "|"), ...);
             if (!id_str.empty()) id_str.pop_back();
 
+            if (id_str.empty()) return entt::resource<T>{nullptr};
+            
             auto id = entt::hashed_string{id_str.c_str()};
 
             auto it = cache.map.find(id);
@@ -53,6 +55,8 @@ namespace meatengine {
             std::string id_str;
             ((id_str += std::string{std::forward<Args>(args)} + "|"), ...);
             if (!id_str.empty()) id_str.pop_back();
+
+            if (id_str.empty()) return entt::resource<T>{nullptr};
 
             auto id = entt::hashed_string{id_str.c_str()};
 
