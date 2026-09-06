@@ -38,16 +38,11 @@ namespace AnimatronicSystems {
         for (auto [e, a, amp] : registry.view<Animatronic, AnimatronicMovePath, EventAnimatronicMove>().each()) { // 
             
             if (amp.at_office()) {
-                meatengine::SoundPlayer::play(
-                    meatengine::ResourceLoader::load<meatengine::SoundBuffer>(
-                        "res/" + a.id + "/jumpscare.mp3"
-                    )
+                fnafcpp::packed_entity::jumpscare::spawn(registry,
+                    "res/" + a.id + "/jumpscare.mp3",
+                    "res/" + a.id + "/jumpscare.png",
+                    "res/" + a.id + "/jumpscare.json"
                 );
-
-                // fnafcpp::packed_entity::jumpscare::spawn(registry,
-                //     "res/" + a.id + "/jumpscare.png",
-                //     "res/" + a.id + "/jumpscare.json"
-                // );
             }
 
             registry.remove<EventAnimatronicMove>(e);

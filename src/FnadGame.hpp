@@ -105,9 +105,9 @@ public:
 
     void update(sf::RenderWindow& window, entt::registry& registry, float dt) override {
         TimerSystems::update(registry, dt);
-        SpriteSystems::update(registry, window, dt);
         NightSystems::update(registry, dt);
         AnimatronicSystems::update(registry, dt);
+        SpriteSystems::update(registry, window, dt);
     }
     
     void render(sf::RenderWindow& window, entt::registry& registry, float dt) override {
