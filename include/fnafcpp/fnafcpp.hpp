@@ -1,5 +1,7 @@
 #pragma once
 
+#include <fnafcpp/Generic.hpp>
+
 #include <fnafcpp/animatronic/Components.hpp>
 #include <fnafcpp/animatronic/Systems.hpp>
 #include <fnafcpp/night/Components.hpp>

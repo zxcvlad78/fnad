@@ -6,6 +6,8 @@
 #include <functional>
 #include <unordered_set>
 
+struct ChildOf { entt::entity entity; };
+
 struct Transform {
     sf::Vector2f position;
     sf::Angle rotation_degrees;
@@ -28,6 +30,30 @@ struct Transform {
         }
         return *this;
     }
+
+    static sf::Transform get_global(entt::registry& registry, entt::entity entity) {
+        sf::Vector2f pos(0.f, 0.f);
+        entt::entity current = entity;
+        
+        std::vector<entt::entity> chain;
+        while (true) {
+            chain.push_back(current);
+            if (!registry.any_of<ChildOf>(current)) break;
+            current = registry.get<ChildOf>(current).entity;
+        }
+        
+        sf::Transform sft;
+        for (auto it = chain.rbegin(); it != chain.rend(); ++it) {
+            if (registry.all_of<Transform>(*it)) {
+                const auto& t = registry.get<Transform>(*it);
+                sft.translate(t.position);
+                sft.rotate(t.rotation_degrees);
+                sft.scale(t.scale);
+            }
+        }
+        
+        return sft;
+    }
 };
 
 struct Offset {
@@ -40,8 +66,6 @@ struct Offset {
         };
     }
 };
-
-struct ChildOf { entt::entity entity; };
 
 struct Velocity {
     float x = 0.0f;

@@ -6,16 +6,29 @@
 
 class FnadGame : public meatengine::GameState {
     sf::Vector2f window_sizef;
-    
+    entt::entity root_entity;
 
 public:
     void on_enter(sf::RenderWindow& window, entt::registry& registry) override {
+        // root
+        root_entity = registry.create(); {
+            auto& transform = registry.emplace<Transform>(root_entity); {
+                //transform.scale.x = 2.f;
+            }
+
+        }
+        
 
         //bg
         {auto entity = registry.create();
+            registry.emplace<ChildOf>(entity, root_entity);
             registry.emplace<ZIndex>(entity, -1);
+            auto& fullscreen_scale = registry.emplace<FullScreenScale>(entity); {
+                fullscreen_scale.multiplier.x = 1.35f;
+            }
+            registry.emplace<fnafcpp::OfficePanorama>(entity);
+            
             auto& transform = registry.emplace<Transform>(entity);
-            registry.emplace<FullScreenScale>(entity);
             
             auto& sprite = registry.emplace<Sprite>(entity,
                 meatengine::ResourceLoader::load<meatengine::Texture>("res/bg.jpg")
@@ -107,6 +120,7 @@ public:
         TimerSystems::update(registry, dt);
         NightSystems::update(registry, dt);
         AnimatronicSystems::update(registry, dt);
+        fnafcpp::GenericSystems::update(registry, window, dt);
         SpriteSystems::update(registry, window, dt);
     }
     

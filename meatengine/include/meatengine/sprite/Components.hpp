@@ -13,7 +13,9 @@ struct Sprite {
     Sprite(entt::resource<meatengine::Texture> texture) : sprite(texture.handle()->res) { }
 };
 
-struct FullScreenScale {  };
+struct FullScreenScale {
+    sf::Vector2f multiplier = {1.f, 1.f};
+};
 
 struct SpriteAnimation {
     entt::resource<meatengine::SpriteSheet> spritesheet;

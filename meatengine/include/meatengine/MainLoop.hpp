@@ -13,6 +13,21 @@ namespace meatengine {
         void run(std::unique_ptr<GameState> initial_state);
         void change_state(std::unique_ptr<GameState> new_state);
 
+        std::string get_window_title();
+        void set_window_title(std::string& new_title);
+
+        sf::RenderWindow& get_window();
+        const sf::RenderWindow& get_window() const;
+
+        sf::Clock& get_clock();
+        const sf::Clock& get_clock() const;
+
+        entt::registry& get_registry();
+        const entt::registry& get_registry() const;
+
+        void set_framerate_limit(float value);
+        float get_framerate_limit();
+
         inline static float dt_scale = 1.f;
 
     private:

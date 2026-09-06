@@ -12,11 +12,14 @@ namespace SpriteSystems {
         auto view = registry.view<Sprite, Transform, FullScreenScale>();
         sf::Vector2f window_sizef = static_cast<sf::Vector2f>(window.getSize());
 
-        for (auto [e, s, t] : view.each()) {
+        for (auto [e, s, t, fsc] : view.each()) {
             auto texture_size = s.sprite.getTextureRect().size;
             if (texture_size.x == 0 || texture_size.y == 0) continue;
 
-            sf::Vector2f target_scale = {window_sizef.x / texture_size.x, window_sizef.y / texture_size.y};
+            sf::Vector2f target_scale = {
+                window_sizef.x / texture_size.x * fsc.multiplier.x,
+                window_sizef.y / texture_size.y * fsc.multiplier.y
+            };
 
             t.scale = target_scale;
         }
@@ -26,7 +29,6 @@ namespace SpriteSystems {
         struct Renderable {
             sf::Sprite* sprite;
             sf::Vector2f position;
-            sf::Vector2f offset;
             sf::Angle rotation;
             sf::Vector2f scale;
             int z_index;
@@ -45,17 +47,21 @@ namespace SpriteSystems {
             }
 
             int z_index = 0;
-            
             if (registry.all_of<ZIndex>(entity)) {
                 z_index = registry.get<ZIndex>(entity).value;
             }
 
+            sf::Transform global_transform = Transform::get_global(registry, entity);
+            sf::Vector2f global_pos = global_transform.transformPoint({0.f, 0.f});
+
+            sf::Angle global_rotation = transform.rotation_degrees;
+            sf::Vector2f global_scale = transform.scale;
+
             Renderable renderable;
             renderable.sprite = &sprite.sprite;
-            renderable.position = transform.position;
-            renderable.offset = sprite.offset;
-            renderable.rotation = transform.rotation_degrees;
-            renderable.scale = transform.scale;
+            renderable.position = global_pos + sprite.offset;
+            renderable.rotation = global_rotation;
+            renderable.scale = global_scale;
             renderable.z_index = z_index;
 
             renderables.push_back(renderable);
@@ -67,10 +73,10 @@ namespace SpriteSystems {
             });
 
         for (const auto& renderable : renderables) {
-            sf::Vector2f pos = renderable.position + renderable.offset;
-            renderable.sprite->setPosition({pos.x, pos.y});
+            renderable.sprite->setPosition({renderable.position.x, renderable.position.y});
             renderable.sprite->setRotation({renderable.rotation});
             renderable.sprite->setScale({renderable.scale.x, renderable.scale.y});
+            printf("rendering sprie with scale {%f, %f}\n", renderable.scale.x, renderable.scale.y);
             
             window.draw(*renderable.sprite);
         }

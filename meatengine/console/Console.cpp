@@ -59,8 +59,8 @@ namespace meatengine {
         return i;
     }
 
-    void Console::init(sf::RenderWindow& window, sf::Font& f, uint16_t character_size) {
-        load_cfg(window);
+    void Console::init(meatengine::MainLoop& main_loop, sf::Font& f, uint16_t character_size) {
+        load_cfg(main_loop.get_window());
 
         font_ptr = &f;
         char_size = character_size;
@@ -108,7 +108,7 @@ namespace meatengine {
         
 
         register_default_commands();
-        console_commands::init(window);
+        console_commands::init(main_loop);
         print_success("Console initialized! Type 'help' for available commands");
     }
 

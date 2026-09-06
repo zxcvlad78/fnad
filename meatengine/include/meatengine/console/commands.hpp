@@ -6,7 +6,7 @@
 
 
 namespace meatengine::console_commands {
-    inline void init(sf::RenderWindow& window) {
+    inline void init(meatengine::MainLoop& main_loop) {
         Console::get_instance().register_command(
             "cfg.save",
             [](const std::vector<std::string>& args) {
@@ -16,23 +16,23 @@ namespace meatengine::console_commands {
             "cfg.save"
         );
         Console::get_instance().register_command(
-            "fps_max",
-            [&window](const std::vector<std::string>& args) {
+            "fps.max",
+            [&main_loop](const std::vector<std::string>& args) {
                 if (!args.empty()) {
                     try {
                         int fps = std::stoi(args[0]);
-                        window.setFramerateLimit(fps);
+                        main_loop.set_framerate_limit(fps);
                     } catch (const std::exception& e) {
                         Console::get_instance().print_error(e.what());
                     }
                 }
             },
             "Set target framerate",
-            "fps_max <int>"
+            "fps.max <int>"
         );
         Console::get_instance().register_command(
             "volume",
-            [&window](const std::vector<std::string>& args) {
+            [](const std::vector<std::string>& args) {
                 if (!args.empty()) {
                     try {
                         //float vol = std::stoi(args[0]);

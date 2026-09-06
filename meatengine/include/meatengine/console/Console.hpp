@@ -8,6 +8,7 @@
 #include <deque>
 #include <algorithm>
 #include <meatengine/config_file/ConfigFile.hpp>
+#include <meatengine/MainLoop.hpp>
 
 namespace meatengine {
     struct TextSelection {
@@ -98,7 +99,7 @@ namespace meatengine {
     public:
         static Console& get_instance();
         
-        void init(sf::RenderWindow& window, sf::Font& f, uint16_t character_size = 14);
+        void init(meatengine::MainLoop& main_loop, sf::Font& f, uint16_t character_size = 14);
         void update(sf::RenderWindow& window, float dt);
         void render(sf::RenderWindow& window);
         void handle_event(const sf::Event& event, sf::RenderWindow& window);
