@@ -12,6 +12,6 @@ namespace fnafcpp {
     }
     
     struct OfficePanorama { 
-        float move_speed = 350.f;
+        float move_speed = 750.f;
     };
 }

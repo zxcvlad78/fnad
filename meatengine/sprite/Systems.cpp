@@ -76,7 +76,6 @@ namespace SpriteSystems {
             renderable.sprite->setPosition({renderable.position.x, renderable.position.y});
             renderable.sprite->setRotation({renderable.rotation});
             renderable.sprite->setScale({renderable.scale.x, renderable.scale.y});
-            printf("rendering sprie with scale {%f, %f}\n", renderable.scale.x, renderable.scale.y);
             
             window.draw(*renderable.sprite);
         }
