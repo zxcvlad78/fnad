@@ -8,3 +8,4 @@
 #include <fnafcpp/night/Systems.hpp>
 
 #include <fnafcpp/packed_entity.hpp>
+#include <fnafcpp/console_commands.hpp>

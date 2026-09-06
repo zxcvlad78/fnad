@@ -15,10 +15,10 @@ struct Animatronic {
 };
 
 struct AnimatronicMovement {
-    inline static const float MOVE_INTERVAL = 5.f;
+    inline static float roll_interval = 5.f;
     float move_timer = 0.f;
     
-    bool is_move_cooldown() { return move_timer < MOVE_INTERVAL; }
+    bool is_move_cooldown() { return move_timer < roll_interval; }
 };
 
 struct AnimatronicMovePath {

@@ -81,8 +81,8 @@ namespace meatengine {
         head_rect.setOutlineColor(theme_outline_color);
         
         head_title->setCharacterSize(24);
-        head_title->setFillColor(sf::Color(180, 180, 200));
-        head_title->setString("Console");
+        head_title->setFillColor(sf::Color(200, 180, 180));
+        head_title->setString("MeatEngine Console");
         
         input_rect.setFillColor(foreground_color);
         input_rect.setOutlineThickness(theme_outline_thickness);

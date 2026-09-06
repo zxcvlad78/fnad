@@ -6,6 +6,7 @@ bool RenderSystems::enabled = true;
 int main() {
     meatengine::MainLoop loop("Fnad");
     
+    fnafcpp::console_commands::init(loop);
     loop.run(std::make_unique<FnadGame>());
     
     return 0;

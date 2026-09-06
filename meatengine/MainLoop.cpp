@@ -90,10 +90,11 @@ namespace meatengine {
 
             process_events();
 
-            float dt = m_clock.restart().asSeconds() * dt_scale;
+            float dt = m_clock.restart().asSeconds();
+            float scaled_dt = dt * dt_scale;
 
             if (m_current_state) {
-                m_current_state->update(m_window, m_registry, dt);
+                m_current_state->update(m_window, m_registry, scaled_dt);
             }
 
             // потом как нибудь
@@ -103,7 +104,7 @@ namespace meatengine {
             m_window.clear(sf::Color::Black);
             
             if (m_current_state) {
-                m_current_state->render(m_window, m_registry, dt);
+                m_current_state->render(m_window, m_registry, scaled_dt);
             }
 
             // потом как нибудь
