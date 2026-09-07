@@ -8,12 +8,36 @@
 namespace meatengine::console_commands {
     inline void init(meatengine::MainLoop& main_loop) {
         Console::get_instance().register_command(
+            "exit",
+            [&main_loop](const std::vector<std::string>& args) {
+                main_loop.get_window().close();
+            },
+            "Exit",
+            "exit"
+        );
+        Console::get_instance().register_command(
             "cfg.save",
             [](const std::vector<std::string>& args) {
                 Console::get_instance().config_file->save();
             },
             "Save cfg file",
             "cfg.save"
+        );
+        Console::get_instance().register_command(
+            "cfg.load",
+            [&main_loop](const std::vector<std::string>& args) {
+                Console::get_instance().load_cfg(main_loop.get_window());
+            },
+            "Load cfg file",
+            "cfg.load"
+        );
+        Console::get_instance().register_command(
+            "cfg.reset",
+            [&main_loop](const std::vector<std::string>& args) {
+                Console::get_instance().reset_cfg(main_loop.get_window());
+            },
+            "Reset cfg file",
+            "cfg.reset"
         );
         Console::get_instance().register_command(
             "fps.max",

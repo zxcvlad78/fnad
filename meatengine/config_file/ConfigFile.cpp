@@ -50,16 +50,20 @@ namespace meatengine {
     }
 
     bool ConfigFile::load(const std::string& path) {
+        printf("AAZXCAAAZXCAAAAASSSSSSSSSSSS\n");
         std::string full_path;
         if (path.empty()) full_path = get_full_path(_save_path);
         else full_path = get_full_path(path);
 
         if (!std::filesystem::exists(full_path)) {
+            printf("1\n");
             return false;
         }
         std::ifstream file(full_path);
-        if (!file.is_open())
+        if (!file.is_open()) {
+            printf("2\n");
             return false;
+        }
 
         values.clear();
         std::string line;
