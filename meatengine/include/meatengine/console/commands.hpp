@@ -12,8 +12,41 @@ namespace meatengine::console_commands {
             [&main_loop](const std::vector<std::string>& args) {
                 main_loop.get_window().close();
             },
-            "Exit",
+            "Close window and exit",
             "exit"
+        );
+        Console::get_instance().register_command(
+            "echo.mode",
+            [](const std::vector<std::string>& args) {
+                if (args.empty()) {
+                    Console::get_instance().print("echo mode: " + Console::get_instance().echo_mode);
+                    return;
+                }
+                try {
+                    Console::get_instance().echo_mode = std::stoi(args[0]);
+
+                } catch (const std::exception& e) {
+                    Console::get_instance().print_error(e.what());
+                }
+            },
+            "Echo mode",
+            "echo, echo <bool>"
+        );
+        Console::get_instance().register_command(
+            "echo",
+            [](const std::vector<std::string>& args) {
+                if (args.size() != 1) {
+                    return;
+                }
+
+                try {
+                    Console::get_instance().print(args[0]);
+                } catch (const std::exception& e) {
+                    Console::get_instance().print_error(e.what());
+                }
+            },
+            "Echo message",
+            "echo <string>"
         );
         Console::get_instance().register_command(
             "cfg.save",

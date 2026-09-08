@@ -7,7 +7,7 @@
 namespace meatengine::parsing {
     inline sf::Color str_to_color(const std::string& str) {
         std::stringstream ss(str);
-        std::uint8_t r = 0, g = 0, b = 0, a = 255;
+        int r = 0, g = 0, b = 0, a = 255;
     
         if (ss >> r >> g >> b) { ss >> a; }
     

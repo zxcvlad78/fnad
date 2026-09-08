@@ -37,7 +37,7 @@ namespace meatengine {
         config_file->set("theme_outline_thickness", .1f);
 
         config_file->save();
-        
+
         texts_dirty = true;
         if (update_ui) update_ui_cfg(window);
     }
@@ -123,7 +123,7 @@ namespace meatengine {
         if (messages.size() > max_messages) messages.pop_front();
         texts_dirty = true;
     }
-
+ 
     void Console::print_plain(const std::string& text, sf::Color color) {
         std::vector<BBCode::TextFragment> frags;
         frags.emplace_back(text, color, char_size, false, false, false);
@@ -145,7 +145,10 @@ namespace meatengine {
     void Console::execute_command(const std::string& command_line) {
         if (command_line.empty()) return;
         add_to_history(command_line);
-        print_plain("> " + command_line, sf::Color(150, 150, 150));
+
+        if (echo_mode) {
+            print_plain("> " + command_line, sf::Color(150, 150, 150));
+        }
 
         std::istringstream iss(command_line);
         std::string cmd_name;
@@ -394,7 +397,7 @@ namespace meatengine {
         float max_width = console_width - 30.f;
         float x = 15.f;
         float y = 0.f;
-        float lineHeight = static_cast<float>(char_size) * 1.2f;
+        float line_height = static_cast<float>(char_size) * 1.2f;
 
         for (const auto& msg : messages) {
             for (const auto& frag : msg) {
@@ -406,19 +409,19 @@ namespace meatengine {
                 if (frag.underlined) style |= sf::Text::Underlined;
                 txt.setStyle(style);
 
-                float fragWidth = txt.getLocalBounds().size.x;
-                if (x + fragWidth > max_width && x > 15.f) {
+                float frag_width = txt.getLocalBounds().size.x;
+                if (x + frag_width > max_width && x > 15.f) {
                     x = 15.f;
-                    y += lineHeight;
+                    y += line_height;
                 }
                 txt.setPosition({x, y});
                 render_items.push_back({std::move(txt), sf::Vector2f(x, y)});
-                x += fragWidth;
+                x += frag_width;
             }
             x = 15.f;
-            y += lineHeight;
+            y += line_height;
         }
-        total_text_height = y + lineHeight;
+        total_text_height = y + line_height;
         texts_dirty = false;
     }
 

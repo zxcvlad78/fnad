@@ -33,6 +33,7 @@ namespace meatengine {
 
         TextSelection text_selection;
         ConfigFile* config_file = new ConfigFile("console.cfg");
+        bool echo_mode = true;
 
         static Console& get_instance();
 
