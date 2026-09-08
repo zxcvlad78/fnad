@@ -12,6 +12,34 @@ namespace meatengine {
         return instance;
     }
 
+    void Console::save_history() {
+        std::string str_history;
+
+        int history_size = command_history.size();
+        if (history_size == 0) return;
+
+        for (int i = 0; i < command_history.size(); i++) {
+            str_history += command_history.at(i) + ',';
+        }
+        str_history.erase(str_history.size()-1);
+        print("history: " + str_history);
+
+        config_file->set("history", str_history);
+        config_file->save();
+    }
+
+    void Console::load_history() {
+        std::string str_history = config_file->get("history", "");
+        if (str_history.empty()) return;
+
+        std::stringstream stream(str_history);
+        std::string command;
+
+        while (std::getline(stream, command, ',')) {
+            if (!command.empty()) command_history.push_back(command);
+        }
+    }
+
     void Console::update_ui_cfg(sf::RenderWindow& window) {
         sf::Vector2f window_size = static_cast<sf::Vector2f>(window.getSize());
 
@@ -19,7 +47,7 @@ namespace meatengine {
         foreground_color = meatengine::parsing::str_to_color(config_file->get("foreground_color", "25 25 25 255"));
         background_color = meatengine::parsing::str_to_color(config_file->get("background_color", "15 15 15 240"));
         selection_color = meatengine::parsing::str_to_color(config_file->get("selection_color", "255 15 15 127"));
-        char_size = config_file->get("char_size", 14);
+        char_size = config_file->get("char_size", 16);
         console_width = config_file->get("console_width", window_size.x);
         console_height = config_file->get("console_height", window_size.y);
         input_padding = config_file->get("input_padding", 10.f);
@@ -69,6 +97,7 @@ namespace meatengine {
 
     void Console::init(meatengine::MainLoop& main_loop, sf::Font& f, uint16_t character_size) {
         load_cfg(main_loop.get_window());
+        load_history();
         font_ptr = &f;
         char_size = character_size;
 
@@ -620,6 +649,7 @@ namespace meatengine {
             if (command_history.size() > max_history) command_history.pop_front();
         }
         history_index = -1;
+        save_history();
     }
 
     void Console::register_default_commands() {

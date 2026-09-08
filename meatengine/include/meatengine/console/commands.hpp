@@ -35,12 +35,13 @@ namespace meatengine::console_commands {
         Console::get_instance().register_command(
             "echo",
             [](const std::vector<std::string>& args) {
-                if (args.size() != 1) {
-                    return;
+                std::string total_string;
+                for (auto c : args) {
+                    total_string += c + " ";
                 }
 
                 try {
-                    Console::get_instance().print(args[0]);
+                    Console::get_instance().print(total_string);
                 } catch (const std::exception& e) {
                     Console::get_instance().print_error(e.what());
                 }

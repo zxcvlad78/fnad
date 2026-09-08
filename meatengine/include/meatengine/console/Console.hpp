@@ -113,7 +113,7 @@ namespace meatengine {
         size_t max_messages = 100;
 
         sf::Font* font_ptr = nullptr;
-        uint16_t char_size = 14;
+        uint16_t char_size = 16;
 
         float console_width = 640.f;
         float console_height = 300.f;
@@ -135,6 +135,8 @@ namespace meatengine {
         void update_cursor(float dt);
         void clamp_scroll();
         void add_to_history(const std::string& command);
+        void save_history();
+        void load_history();
 
         void register_default_commands();
         void update_ui_cfg(sf::RenderWindow& window);
