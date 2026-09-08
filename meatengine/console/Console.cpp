@@ -22,7 +22,6 @@ namespace meatengine {
             str_history += command_history.at(i) + ',';
         }
         str_history.erase(str_history.size()-1);
-        print("history: " + str_history);
 
         config_file->set("history", str_history);
         config_file->save();
